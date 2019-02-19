@@ -58,6 +58,8 @@ namespace ClockProbGen
                     }
                 }
                 Console.WriteLine($"</table>");
+                Console.WriteLine($"</body>");
+                Console.WriteLine($"</html>");
             }
             catch (Exception ex)
             {
