@@ -11,55 +11,70 @@ namespace ClockProbGen
     {
         private static void Main(string[] args)
         {
-            const int columns = 4;
-            const int rows = 5;
+            if (!args.Any())
+            {
+                var message = "you must speficiy the number of worksheets to generate.";
+                message += "\r\n" + "For example";
+                message += "\r\n\r\n    " + "clockprobgen 5\r\n\r\ngenerates 5 worksheets.";
+                throw new Exception(message);
+            }
+            int numberOfWorksheets = Convert.ToInt32(args[0]);
             try
             {
-                Console.WriteLine("<!doctype html>");
-                Console.WriteLine("<html lang=\"en\">");
-                Console.WriteLine("<head>");
-                Console.WriteLine("<title>Nothing</title>");
-                Console.WriteLine("<style type='text/css'>");
-                Console.WriteLine("body {");
-                Console.WriteLine("font-size:20pt;");
-                Console.WriteLine("}");
-                Console.WriteLine(".clock {");
-                Console.WriteLine("height:170px;");
-                Console.WriteLine("width:170px;");
-                Console.WriteLine("margin:20px;");
-                Console.WriteLine("}");
-                Console.WriteLine(".clocktable {");
-                Console.WriteLine("text-align:center;");
-                Console.WriteLine("padding:20px;");
-                Console.WriteLine("margin:0;");
-                Console.WriteLine("border-collapse:collapse;");
-                Console.WriteLine("}");
-                Console.WriteLine(".clocktable,.clocktable td {");
-                Console.WriteLine("border:solid 1px #dddddd;");
-                Console.WriteLine("}");
-                Console.WriteLine("</style>");
-                Console.WriteLine("<script>");
-                Console.WriteLine("</script>");
-                Console.WriteLine("</head>");
-
-                var rnd = new Random();
-                Console.WriteLine($"<table class=\"clocktable\">");
-                for (int i = 0; i < rows * columns; i++)
+                const int columns = 4;
+                const int rows = 5;
+                for (int sheet = 0; sheet < numberOfWorksheets; sheet++)
                 {
-                    if (i % columns == 0)
+                    var filename = $"clock-worksheet-{sheet + 1:D3}.html";
+                    using (var stream = new StreamWriter(filename))
                     {
-                        Console.WriteLine($"<tr>");
-                    }
-                    var time = rnd.Next(1440) / 5 * 5;
-                    Console.WriteLine($"<td>{time / 60:D2}:{time % 60:D2}<br><img class=\"clock\" src=\"images/clock-blank.svg\"></td>");
-                    if ((i + 1) % columns == 0)
-                    {
-                        Console.WriteLine($"</tr>");
+                        stream.WriteLine("<!doctype html>");
+                        stream.WriteLine("<html lang=\"en\">");
+                        stream.WriteLine("<head>");
+                        stream.WriteLine("<title>Nothing</title>");
+                        stream.WriteLine("<style type='text/css'>");
+                        stream.WriteLine("body {");
+                        stream.WriteLine("font-size:20pt;");
+                        stream.WriteLine("}");
+                        stream.WriteLine(".clock {");
+                        stream.WriteLine("height:170px;");
+                        stream.WriteLine("width:170px;");
+                        stream.WriteLine("margin:20px;");
+                        stream.WriteLine("}");
+                        stream.WriteLine(".clocktable {");
+                        stream.WriteLine("text-align:center;");
+                        stream.WriteLine("padding:20px;");
+                        stream.WriteLine("margin:0;");
+                        stream.WriteLine("border-collapse:collapse;");
+                        stream.WriteLine("}");
+                        stream.WriteLine(".clocktable,.clocktable td {");
+                        stream.WriteLine("border:solid 1px #dddddd;");
+                        stream.WriteLine("}");
+                        stream.WriteLine("</style>");
+                        stream.WriteLine("<script>");
+                        stream.WriteLine("</script>");
+                        stream.WriteLine("</head>");
+
+                        var rnd = new Random();
+                        stream.WriteLine($"<table class=\"clocktable\">");
+                        for (int i = 0; i < rows * columns; i++)
+                        {
+                            if (i % columns == 0)
+                            {
+                                stream.WriteLine($"<tr>");
+                            }
+                            var time = rnd.Next(1440) / 5 * 5;
+                            stream.WriteLine($"<td>{time / 60:D2}:{time % 60:D2}<br><img class=\"clock\" src=\"images/clock-blank.svg\"></td>");
+                            if ((i + 1) % columns == 0)
+                            {
+                                stream.WriteLine($"</tr>");
+                            }
+                        }
+                        stream.WriteLine($"</table>");
+                        stream.WriteLine($"</body>");
+                        stream.WriteLine($"</html>");
                     }
                 }
-                Console.WriteLine($"</table>");
-                Console.WriteLine($"</body>");
-                Console.WriteLine($"</html>");
             }
             catch (Exception ex)
             {
